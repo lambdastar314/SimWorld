@@ -21,8 +21,8 @@ fun main() {
     jf.isVisible = true
 }
 
-class TDCanvas(var gs: GrayScott) : Canvas() {
-    var timer = Timer(1) {
+class TDCanvas(private var gs: GrayScott) : Canvas() {
+    private var timer = Timer(1) {
         repaint()
     }
 
@@ -64,6 +64,6 @@ class TDCanvas(var gs: GrayScott) : Canvas() {
         val front: List<Color> = Gradation.calc(Color.RED, Color.YELLOW, 64+32).asList()
         val center = Gradation.calc(Color.YELLOW, Color.GREEN, 64-32).asList()
         val back = Gradation.calc(Color.GREEN, Color.BLACK, 128).asList()
-        return MergedList<Color>(front, MergedList(center, back))
+        return MergedList(front, MergedList(center, back))
     }
 }

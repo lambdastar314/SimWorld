@@ -39,7 +39,7 @@ class TuringPattern(
         scaleY: Double = 10.0,
         z: Double
     ) {
-        val r = Random(1)
+//        val r = Random(1) //ランダムを使うときにコメントを外すこと
         for (x in 0 until width) {
             for (y in 0 until height) {
                 //パーリンノイズで埋め尽くす
@@ -88,7 +88,7 @@ class TuringPattern(
     }
 
     private fun diffucation() {
-        var n = Array(width) { Array(height) { Cell(0.0, 0.0) } }
+        val n = Array(width) { Array(height) { Cell(0.0, 0.0) } }
         for (x in 0 until width) {
             for (y in 0 until height) {
                 var rightCell = pattern[(x + 1) % width][y].activator

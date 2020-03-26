@@ -45,18 +45,18 @@ class MCanvas : MouseMotionListener, MouseWheelListener, Canvas() {
                 ig.color = when (map[x][y]) {
                     MOUNTAIN -> Color(0, 0xff, 0x80)
                     NDEFINED -> Color.BLACK
-                    DEEP_FLOZEN_OCEAN -> Color(0, 0x30, 0xf0)
+                    DEEP_FROZEN_OCEAN -> Color(0, 0x30, 0xf0)
                     DEEP_COLD_OCEAN -> Color(0, 0x40, 0x80)
                     DEEP_OCEAN -> Color(0, 0, 0x80)
                     DEEP_WARM_OCEAN -> Color(0, 0x80, 0xa0)
-                    FLOZEN_OCEAN -> Color(0, 0x70, 0xf0)
+                    FROZEN_OCEAN -> Color(0, 0x70, 0xf0)
                     COLD_OCEAN -> Color(0, 0x0, 0xc0)
                     OCEAN -> Color(0, 0, 0xff)
                     WARM_OCEAN -> Color(0, 0xa0, 0xc0)
-                    FLOZEN_PLAIN -> Color(0xc0, 0xc0, 0xff)
+                    FROZEN_PLAIN -> Color(0xc0, 0xc0, 0xff)
                     SNOW_PLAIN -> Color(0xff, 0xff, 0xff)
                     PLAIN -> Color(0, 0x80, 0)
-                    SAVVANNA -> Color(0xff, 0x80, 0)
+                    SAVANNA -> Color(0xff, 0x80, 0)
                 }
                 ig.fillRect(x, y, 1, 1)
 //                g.drawImage(image, 0, 0, this)
