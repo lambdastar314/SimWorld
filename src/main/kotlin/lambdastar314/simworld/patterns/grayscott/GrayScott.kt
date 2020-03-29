@@ -50,11 +50,11 @@ class GrayScott(
     }
 
     fun tick() {
-        diffucation()
+        diffusion()
         currentTick++
     }
 
-    private fun diffucation() {
+    private fun diffusion() {
         val laplacian = Array(width) { Array(height) { Cell(0.0, 0.0) } }
         for (x in 0 until width) {
             for (y in 0 until height) {

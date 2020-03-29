@@ -5,7 +5,6 @@
 package lambdastar314.simworld.patterns.turingpattern
 
 import lambdastar314.simworld.worldgenerators.perlin.PerlinNoise
-import java.util.*
 
 /**
  *
@@ -61,7 +60,7 @@ class TuringPattern(
         grow()
         growinhibitor()
         //拡散させる
-        diffucation()
+        diffusion()
         currentTick++
     }
 
@@ -87,7 +86,7 @@ class TuringPattern(
         }
     }
 
-    private fun diffucation() {
+    private fun diffusion() {
         val n = Array(width) { Array(height) { Cell(0.0, 0.0) } }
         for (x in 0 until width) {
             for (y in 0 until height) {
