@@ -1,6 +1,6 @@
 package lambdastar314.simworld.util
 
-class MergedList<T>(private val front: List<T>, private val back: List<T>): List<T> {
+class MergedList<T>(private val front: List<T>, private val back: List<T>) : List<T> {
     override val size: Int
         get() = front.size + back.size
 
@@ -13,12 +13,12 @@ class MergedList<T>(private val front: List<T>, private val back: List<T>): List
     }
 
     override fun get(index: Int): T {
-        return if(index < front.size) front[index] else back[index - front.size]
+        return if (index < front.size) front[index] else back[index - front.size]
     }
 
     override fun indexOf(element: T): Int {
         val frontis = front.indexOf(element)
-        return if(frontis != -1) frontis
+        return if (frontis != -1) frontis
         else back.indexOf(element) + front.size
     }
 

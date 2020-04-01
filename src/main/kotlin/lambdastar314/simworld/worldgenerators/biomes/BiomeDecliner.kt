@@ -2,13 +2,13 @@ package lambdastar314.simworld.worldgenerators.biomes
 
 object BiomeDecliner {
     enum class Biome {
-        DEEP_FROZEN_OCEAN, FROZEN_OCEAN,FROZEN_PLAIN,
+        DEEP_FROZEN_OCEAN, FROZEN_OCEAN, FROZEN_PLAIN,
         DEEP_COLD_OCEAN, COLD_OCEAN, SNOW_PLAIN,
         DEEP_OCEAN, OCEAN, PLAIN, MOUNTAIN, NDEFINED,
-        DEEP_WARM_OCEAN, WARM_OCEAN, SAVANNA,;
+        DEEP_WARM_OCEAN, WARM_OCEAN, SAVANNA, ;
 
         fun getName(): String {
-            return when(this){
+            return when (this) {
                 DEEP_FROZEN_OCEAN -> "凍った深海"
                 DEEP_COLD_OCEAN -> "冷たい深海"
                 DEEP_OCEAN -> "深海"
@@ -39,24 +39,24 @@ object BiomeDecliner {
 
     fun declineByBothHT(height: Int, temperature: Int): Biome {
         if (height in 128..255) return Biome.MOUNTAIN
-        return when(height) {
+        return when (height) {
             //山 一応温度関係なし
             in 128..255 -> Biome.MOUNTAIN
-            in 0..56 ->when(temperature){
+            in 0..56 -> when (temperature) {
                 in 0..64 -> Biome.DEEP_FROZEN_OCEAN
                 in 65..96 -> Biome.DEEP_COLD_OCEAN
                 in 97..160 -> Biome.DEEP_OCEAN
                 in 160..255 -> Biome.DEEP_WARM_OCEAN
                 else -> Biome.NDEFINED
             }
-            in 57..64 ->when(temperature){
+            in 57..64 -> when (temperature) {
                 in 0..64 -> Biome.FROZEN_OCEAN
                 in 65..96 -> Biome.COLD_OCEAN
                 in 97..160 -> Biome.OCEAN
                 in 160..255 -> Biome.WARM_OCEAN
                 else -> Biome.NDEFINED
             }
-            in 65..127 ->when(temperature){
+            in 65..127 -> when (temperature) {
                 in 0..64 -> Biome.FROZEN_PLAIN
                 in 65..96 -> Biome.SNOW_PLAIN
                 in 97..160 -> Biome.PLAIN

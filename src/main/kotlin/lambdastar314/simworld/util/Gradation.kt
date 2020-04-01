@@ -10,8 +10,8 @@ object Gradation {
         val stepr = diffr.toDouble() / length
         val stepg = diffg.toDouble() / length
         val stepb = diffb.toDouble() / length
-        val array = Array<Color>(length){Color.BLACK}
-        for(i in 0 until length){
+        val array = Array<Color>(length) { Color.BLACK }
+        for (i in 0 until length) {
             val red = from.red + (stepr * i).toInt()
             val green = from.green + (stepg * i).toInt()
             val blue = from.blue + (stepb * i).toInt()
