@@ -4,6 +4,9 @@
 package lambdastar314.simworld.patterns.grayscott
 
 import java.util.*
+import kotlin.math.abs
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 class GrayScott(
     val width: Int, val height: Int,
@@ -33,18 +36,30 @@ class GrayScott(
         val r = Random()
         for (x in 0 until width) {
             for (y in 0 until height) {
-                val xsize = 8
+                //正方形にする
+//                val xsize = 8
+//                val xcenter = width / 2
+//                val ysize = 8
+//                val ycenter = height / 2
+//                if (x in (xcenter - xsize)..(xcenter + xsize) && y in (ycenter - ysize)..(ycenter + ysize)) pattern[x][y].u =
+//                    0.5 //+ (r.nextInt(100) - 50) / 100
+//                if (x in (xcenter - xsize)..(xcenter + xsize) && y in (ycenter - ysize)..(ycenter + ysize)) pattern[x][y].v =
+//                    0.25 //+ (r.nextInt(100) - 50) / 100
+                //円形にする
+                val radius = 8.0
                 val xcenter = width / 2
-                val ysize = 8
                 val ycenter = height / 2
-                if (x in (xcenter - xsize)..(xcenter + xsize) && y in (ycenter - ysize)..(ycenter + ysize)) pattern[x][y].u =
-                    0.5 //+ (r.nextInt(100) - 50) / 100
-                if (x in (xcenter - xsize)..(xcenter + xsize) && y in (ycenter - ysize)..(ycenter + ysize)) pattern[x][y].v =
-                    0.25 //+ (r.nextInt(100) - 50) / 100
-//                if(x % 32 !in 5..13 || y % 32 !in 5..13){
-//                    pattern[x][y].u = 0.5
-//                    pattern[x][y].v = 0.25
-//                }
+                if (abs(x - xcenter) in 0..radius.toInt() && abs(y - ycenter) in 0..sqrt(
+                        radius.pow(2.0) - (x - xcenter).toDouble().pow(
+                            2.0
+                        )
+                    ).toInt()
+                ) {
+                    pattern[x][y].u =
+                        0.5
+                    pattern[x][y].v =
+                        0.25
+                }
             }
         }
     }

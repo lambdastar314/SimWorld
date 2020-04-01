@@ -10,8 +10,9 @@ import javax.swing.JFrame
 import javax.swing.Timer
 
 fun main() {
-    val gs = GrayScott(256, 256, f = 0.03, k = 0.063
-            )
+    val gs = GrayScott(
+        256, 256//, f = 0.03, k = 0.063
+    )
     gs.initialize()
     val jf = JFrame("GrayScott")
     jf.setSize(512, 512)
@@ -60,9 +61,10 @@ class TDCanvas(private var gs: GrayScott) : Canvas() {
         if (i > max) return max
         return i
     }
+
     private fun genColors(): List<Color> {
-        val front: List<Color> = Gradation.calc(Color.RED, Color.YELLOW, 64+32).asList()
-        val center = Gradation.calc(Color.YELLOW, Color.GREEN, 64-32).asList()
+        val front: List<Color> = Gradation.calc(Color.RED, Color.YELLOW, 64 + 32).asList()
+        val center = Gradation.calc(Color.YELLOW, Color.GREEN, 64 - 32).asList()
         val back = Gradation.calc(Color.GREEN, Color.BLACK, 128).asList()
         return MergedList(front, MergedList(center, back))
     }
