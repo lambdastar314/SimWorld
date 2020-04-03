@@ -1,3 +1,6 @@
+/*
+ * -> ../PatternDemo.kt
+ */
 package lambdastar314.simworld.patterns.grayscott
 
 import lambdastar314.simworld.util.Gradation

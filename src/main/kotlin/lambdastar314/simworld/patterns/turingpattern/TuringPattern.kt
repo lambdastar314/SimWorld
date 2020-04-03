@@ -7,8 +7,9 @@ package lambdastar314.simworld.patterns.turingpattern
 import lambdastar314.simworld.worldgenerators.perlin.PerlinNoise
 
 /**
- *
+ * -> ../TuringPattern
  */
+@Deprecated("親パッケージのTuringPatternに移行")
 class TuringPattern(
     val width: Int, val height: Int, var dt: Double = 0.2,
     var ds: Double = 1.0,

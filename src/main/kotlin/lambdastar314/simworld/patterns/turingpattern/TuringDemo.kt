@@ -1,3 +1,6 @@
+/*
+ * -> ../PatternDemo.kt
+ */
 package lambdastar314.simworld.patterns.turingpattern
 
 import java.awt.Canvas

@@ -8,6 +8,7 @@ import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
+@Deprecated("親パッケージのGrayScottModelに移行")
 class GrayScott(
     val width: Int, val height: Int,
     //補充及び減量
