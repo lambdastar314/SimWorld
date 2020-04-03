@@ -108,7 +108,7 @@ class TDCanvas(private var turing: TuringPattern) : MouseListener, Canvas() {
         }
 
         g.color = Color.WHITE
-        g.drawString("${turing.currentTick} tick", 128, 256 - 8)
+        g.drawString("${turing.currentTick} tick", 128, 256 + 8)
         ng!!.drawImage(image, 0, 0, this)
         if (!timer.isRunning) timer.start()
         //一つ一つ撮って動画とかにしたい場合はここのコメントを消す

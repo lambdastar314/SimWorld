@@ -51,7 +51,7 @@ class TDCanvas(private var gs: GrayScott) : Canvas() {
             }
         }
         g.color = Color.WHITE
-        g.drawString("${gs.currentTick} tick", 128, 256 - 8)
+        g.drawString("${gs.currentTick} tick", 128, 256+8)
         ncg!!.drawImage(image, 0, 0, this)
         if (!timer.isRunning) timer.start()
     }
