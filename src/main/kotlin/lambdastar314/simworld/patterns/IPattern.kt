@@ -26,4 +26,6 @@ interface IPattern {
     fun getCurrentTick(): Int
 
     fun getSize(): Dimension
+
+    fun resize(newWidth: Int, newHeight: Int)
 }

@@ -128,4 +128,37 @@ class GrayScottModel(
 
     override fun getCurrentTick(): Int = cTick
     override fun getSize(): Dimension = Dimension(width, height)
+
+    override fun resize(newWidth: Int, newHeight: Int) {
+        val wScale = newWidth / width.toDouble()
+        val hScale = newHeight / height.toDouble()
+        val newPattern = Array(newWidth) { Array(newHeight) { IPattern.TuringCell(0.0, 0.0) } }
+        for (ix in 0 until newWidth) {
+            for (iy in 0 until newHeight) {
+//                newPattern[ix][iy] = pattern[ix / wScale][iy / hScale]
+                val xOrigin = ix / wScale
+                val yOrigin = iy / hScale
+                val dx = xOrigin % 1.0
+                val dy = yOrigin % 1.0
+                val xInt = (xOrigin - dx).toInt()
+                val yInt = (yOrigin - dy).toInt()
+                var xInt1 = xInt + 1
+                if (xInt1 >= width) xInt1 = width - 1
+                var yInt1 = yInt + 1
+                if (yInt1 >= height) yInt1 = height - 1
+
+                newPattern[ix][iy].u = pattern[xInt][yInt].u * (1 - dx) * (1 - dy) +
+                        pattern[xInt][yInt1].u * (1 - dx) * dy +
+                        pattern[xInt1][yInt].u * dx * (1 - dy) +
+                        pattern[xInt1][yInt1].u * dx * dy
+                newPattern[ix][iy].v = pattern[xInt][yInt].v * (1 - dx) * (1 - dy) +
+                        pattern[xInt][yInt1].v * (1 - dx) * dy +
+                        pattern[xInt1][yInt].v * dx * (1 - dy) +
+                        pattern[xInt1][yInt1].v * dx * dy
+            }
+        }
+        pattern = newPattern
+        width = newWidth
+        height = newHeight
+    }
 }

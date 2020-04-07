@@ -11,15 +11,19 @@ import javax.swing.JFrame
 
 fun main() {
     val pattern = GrayScottModel()
-    pattern.init(256, 256)
+    val patternWidth = 256
+    val patternHeight = 256
+    pattern.init(patternWidth, patternHeight)
     val radius = 8.0
-//    pattern.fillCircle((256 / 2 - radius).toInt(), (256 / 2 - radius).toInt(), radius)
-//    pattern.fillSquare(120, 120, 8, 8)
+//    val sqw = 8
+//    val sqh = 8
     val r = Random()
-//    pattern.fillRandom(0, 0, 255, 255, r)
-//    pattern.fillRandomSquare(112, 112, 16,16,r)
-    pattern.fillRandomCircle((256 / 2 - radius).toInt(), (256 / 2 - radius).toInt(), radius, r)
-    val jf = JFrame("GrayScott")
+//    pattern.fillCircle((patternWidth / 2 - radius).toInt(), (patternHeight / 2 - radius).toInt(), radius)
+//    pattern.fillSquare(patternWidth / 2 - sqw, patternHeight / 2 - sqh, sqw, sqh)
+//    pattern.fillRandomSquare(0, 0, patternWidth-1, patternHeight-1, r)
+//    pattern.fillRandomSquare(patternWidth / 2 - sqw, patternHeight / 2 - sqh, sqw, sqh,r)
+    pattern.fillRandomCircle((patternWidth / 2 - radius).toInt(), (patternHeight / 2 - radius).toInt(), radius, r)
+    val jf = JFrame("Pattern")
     jf.setSize(512, 512)
     jf.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
     val canvas = PatternCanvas(pattern)
@@ -28,7 +32,6 @@ fun main() {
 }
 
 class PatternCanvas(private var pattern: IPattern) : Canvas() {
-    var doPrint = false
     val colors = genColors()
 
     val loopthread = Thread(Runnable {
@@ -57,11 +60,16 @@ class PatternCanvas(private var pattern: IPattern) : Canvas() {
         g.fillRect(0, 0, 512, 512)
         g.drawImage(image, 0, 0, this)
         g.color = Color.WHITE
-        g.drawString("${pattern.getCurrentTick()} tick", pattern.getSize().width / 2, pattern.getSize().height + 16)
+//        g.drawString("${pattern.getCurrentTick()} tick", pattern.getSize().width / 2, pattern.getSize().height + 16)
+        g.drawString("${pattern.getCurrentTick()} tick", 128, 256+16)
         ng!!.drawImage(buffer, 0, 0, this)
         if (pattern.getCurrentTick() == 1) {
             loopthread.start()
         }
+        //3000tickでサイズを変更させるときに使う
+//        if(pattern.getCurrentTick() == 3000){
+//            pattern.resize(512, 512)
+//        }
     }
 
 
