@@ -5,7 +5,9 @@ import lambdastar314.simworld.util.MergedList
 import java.awt.Canvas
 import java.awt.Color
 import java.awt.Graphics
+import java.awt.event.ActionListener
 import java.awt.image.BufferedImage
+import javax.swing.Timer
 import java.util.*
 import javax.swing.JFrame
 
@@ -18,11 +20,11 @@ fun main() {
 //    val sqw = 8
 //    val sqh = 8
     val r = Random()
-//    pattern.fillCircle((patternWidth / 2 - radius).toInt(), (patternHeight / 2 - radius).toInt(), radius)
-//    pattern.fillSquare(patternWidth / 2 - sqw, patternHeight / 2 - sqh, sqw, sqh)
-//    pattern.fillRandomSquare(0, 0, patternWidth-1, patternHeight-1, r)
-//    pattern.fillRandomSquare(patternWidth / 2 - sqw, patternHeight / 2 - sqh, sqw, sqh,r)
-    pattern.fillRandomCircle((patternWidth / 2 - radius).toInt(), (patternHeight / 2 - radius).toInt(), radius, r)
+//    pattern.fillCircle((patternWidth / 2 - radius).toInt(), (patternHeight / 2 - radius).toInt(), radius)//円を描く
+//    pattern.fillSquare(patternWidth / 2 - sqw, patternHeight / 2 - sqh, sqw, sqh)//四角形を描く
+//    pattern.fillRandomSquare(0, 0, patternWidth-1, patternHeight-1, r)//乱数で埋め尽くす
+//    pattern.fillRandomSquare(patternWidth / 2 - sqw, patternHeight / 2 - sqh, sqw, sqh,r)//ランダムな四角形を描く
+    pattern.fillRandomCircle((patternWidth / 2 - radius).toInt(), (patternHeight / 2 - radius).toInt(), radius, r)//ランダムな円を描く
     val jf = JFrame("Pattern")
     jf.setSize(512, 512)
     jf.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
@@ -34,7 +36,7 @@ fun main() {
 class PatternCanvas(private var pattern: IPattern) : Canvas() {
     val colors = genColors()
 
-    val loopthread = Thread(Runnable {
+    val timer = Timer(0, ActionListener {
         while (true)
             repaint()
     })
@@ -64,7 +66,7 @@ class PatternCanvas(private var pattern: IPattern) : Canvas() {
         g.drawString("${pattern.getCurrentTick()} tick", 128, 256+16)
         ng!!.drawImage(buffer, 0, 0, this)
         if (pattern.getCurrentTick() == 1) {
-            loopthread.start()
+            timer.start()
         }
         //3000tickでサイズを変更させるときに使う
 //        if(pattern.getCurrentTick() == 3000){
