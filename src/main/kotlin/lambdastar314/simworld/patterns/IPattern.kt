@@ -19,7 +19,9 @@ interface IPattern {
 
     fun fillCircle(x: Int, y: Int, radius: Double)
 
-    fun fillRandom(x: Int, y: Int, width: Int, height: Int, r: Random)
+    fun fillRandomSquare(x: Int, y: Int, width: Int, height: Int, r: Random)
+
+    fun fillRandomCircle(x: Int, y: Int, radius: Double, r: Random)
 
     fun getCurrentTick(): Int
 

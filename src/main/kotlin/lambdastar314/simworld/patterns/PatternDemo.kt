@@ -10,13 +10,15 @@ import java.util.*
 import javax.swing.JFrame
 
 fun main() {
-    val pattern = TuringPattern()
+    val pattern = GrayScottModel()
     pattern.init(256, 256)
-//    val radius = 8.0
+    val radius = 8.0
 //    pattern.fillCircle((256 / 2 - radius).toInt(), (256 / 2 - radius).toInt(), radius)
 //    pattern.fillSquare(120, 120, 8, 8)
     val r = Random()
-    pattern.fillRandom(0, 0, 255, 255, r)
+//    pattern.fillRandom(0, 0, 255, 255, r)
+//    pattern.fillRandomSquare(112, 112, 16,16,r)
+    pattern.fillRandomCircle((256 / 2 - radius).toInt(), (256 / 2 - radius).toInt(), radius, r)
     val jf = JFrame("GrayScott")
     jf.setSize(512, 512)
     jf.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
@@ -26,6 +28,7 @@ fun main() {
 }
 
 class PatternCanvas(private var pattern: IPattern) : Canvas() {
+    var doPrint = false
     val colors = genColors()
 
     val loopthread = Thread(Runnable {
@@ -56,8 +59,9 @@ class PatternCanvas(private var pattern: IPattern) : Canvas() {
         g.color = Color.WHITE
         g.drawString("${pattern.getCurrentTick()} tick", pattern.getSize().width / 2, pattern.getSize().height + 16)
         ng!!.drawImage(buffer, 0, 0, this)
-        if (pattern.getCurrentTick() == 1)
+        if (pattern.getCurrentTick() == 1) {
             loopthread.start()
+        }
     }
 
 

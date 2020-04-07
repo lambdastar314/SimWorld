@@ -3,7 +3,6 @@
  */
 package lambdastar314.simworld.patterns
 
-import lambdastar314.simworld.patterns.grayscott.GrayScott
 import java.awt.Dimension
 import java.util.*
 import kotlin.math.abs
@@ -32,7 +31,7 @@ class GrayScottModel(
 
     override fun tick() {
         //ラプラシアンの計算
-        val laplacian = Array(width) { Array(height) { GrayScott.Cell(0.0, 0.0) } }
+        val laplacian = Array(width) { Array(height) { IPattern.TuringCell(0.0, 0.0) } }
         for (x in 0 until width) {
             for (y in 0 until height) {
                 val rightU = pattern[(x + 1) % width][y].u
@@ -100,10 +99,29 @@ class GrayScottModel(
         }
     }
 
-    override fun fillRandom(x: Int, y: Int, width: Int, height: Int, r: Random) {
+    override fun fillRandomSquare(x: Int, y: Int, width: Int, height: Int, r: Random) {
         for (ix in x..(width + x)) {
             for (iy in y..(height + y)) {
-                pattern[ix][iy].u = r.nextDouble() % 1.0
+                pattern[ix][iy].u = 0.5 + (r.nextDouble() % 1.0) / 100.0
+                pattern[ix][iy].v = 0.25 + (r.nextDouble() % 1.0) / 100.0
+            }
+        }
+    }
+
+    override fun fillRandomCircle(x: Int, y: Int, radius: Double, r: Random) {
+        val xcenter = x + radius / 2
+        val ycenter = y + radius / 2
+        for (x in 0 until width) {
+            for (y in 0 until height) {
+                if (abs(x - xcenter) <= radius.toInt() && abs(y - ycenter) <= sqrt(
+                        radius.pow(2.0) - (x - xcenter).pow(
+                            2.0
+                        )
+                    ).toInt()
+                ) {
+                    pattern[x][y].u = 0.5 + (r.nextDouble() % 1.0) / 100.0
+                    pattern[x][y].v = 0.25 + (r.nextDouble() % 1.0) / 100.0
+                }
             }
         }
     }

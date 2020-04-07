@@ -60,7 +60,7 @@ class TuringPattern(
         for (x in 0 until width) {
             for (y in 0 until height) {
                 if (abs(x - xcenter) <= radius.toInt() && abs(y - ycenter) <= sqrt(
-                        radius.pow(2.0) - (x - xcenter).toDouble().pow(
+                        radius.pow(2.0) - (x - xcenter).pow(
                             2.0
                         )
                     ).toInt()
@@ -71,10 +71,27 @@ class TuringPattern(
         }
     }
 
-    override fun fillRandom(x: Int, y: Int, width: Int, height: Int, r: Random) {
+    override fun fillRandomSquare(x: Int, y: Int, width: Int, height: Int, r: Random) {
         for (ix in x..(width + x)) {
             for (iy in y..(height + y)) {
                 pattern[ix][iy].u = r.nextDouble() % 1.0
+            }
+        }
+    }
+
+    override fun fillRandomCircle(x: Int, y: Int, radius: Double, r: Random) {
+        val xcenter = x + radius / 2
+        val ycenter = y + radius / 2
+        for (x in 0 until width) {
+            for (y in 0 until height) {
+                if (abs(x - xcenter) <= radius.toInt() && abs(y - ycenter) <= sqrt(
+                        radius.pow(2.0) - (x - xcenter).pow(
+                            2.0
+                        )
+                    ).toInt()
+                ) {
+                    pattern[x][y].u = r.nextDouble() % 1.0
+                }
             }
         }
     }
