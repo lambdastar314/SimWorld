@@ -37,7 +37,6 @@ class PatternCanvas(private var pattern: IPattern) : Canvas() {
     val colors = genColors()
 
     val timer = Timer(0, ActionListener {
-        while (true)
             repaint()
     })
 
