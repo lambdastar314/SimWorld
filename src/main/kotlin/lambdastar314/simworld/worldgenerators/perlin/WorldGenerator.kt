@@ -1,11 +1,21 @@
 package lambdastar314.simworld.worldgenerators.perlin
 
-import lambdastar314.simworld.worldgenerators.perlin.ImprovedNoise
+import lambdastar314.simworld.worldgenerators.noises.Noise
 
-/**
- * パーリンノイズを生成するクラス
- */
-object PerlinNoise/*(val noise: ImprovedNoise)*/ {
+class WorldGenerator(val algorithm: Noise) {
+
+    /**
+     * Doubleで計算するクラス
+     */
+    fun generateOrigin(
+        x: Int,
+        y: Int,
+        z: Double = 0.0,
+        scaleX: Double = 50.0,
+        scaleY: Double = 50.0
+    ): Double {
+        return algorithm.noise(x / scaleX, y / scaleY, z)
+    }
 
     /**
      * 256内で計算するクラス
@@ -13,10 +23,9 @@ object PerlinNoise/*(val noise: ImprovedNoise)*/ {
     fun generate(
         x: Int,
         y: Int,
-        z: Double,
+        z: Double = 0.0,
         scaleX: Double = 50.0,
         scaleY: Double = 50.0,
-        octave: Int = 16,
         base: Int = 64,
         amplitudeLower: Int = 32,
         amplitudeUpper: Int = 128
@@ -26,37 +35,9 @@ object PerlinNoise/*(val noise: ImprovedNoise)*/ {
             y,
             z,
             scaleX,
-            scaleY,
-            octave
+            scaleY
         );
         return (base + (if (origin > 0) origin * amplitudeUpper else if (origin < 0) origin * amplitudeLower else 0.0)).toInt()
-    }
-
-    /**
-     * Doubleで計算するクラス
-     */
-    fun generateOrigin(
-        x: Int,
-        y: Int,
-        z: Double,
-        scaleX: Double = 50.0,
-        scaleY: Double = 50.0,
-        octave: Int = 16
-    ): Double {
-        val rx = x.toDouble() / scaleX
-        val ry = y.toDouble() / scaleY
-        var a = 1.0
-        var f = 1.0
-        var maxValue = 0.0
-        var totalValue = 0.0
-        val per = 0.5
-        for (i in 0 until octave) {
-            totalValue += a * ImprovedNoise.noise((rx * f), (ry * f), z)
-            maxValue += a
-            a *= per
-            f *= 2.0f
-        }
-        return totalValue / maxValue
     }
 
     /**
@@ -65,10 +46,9 @@ object PerlinNoise/*(val noise: ImprovedNoise)*/ {
     fun generateChunk(
         chunkX: Int,
         chunkY: Int,
-        z: Double,
+        z: Double = 0.0,
         scaleX: Double = 50.0,
         scaleY: Double = 50.0,
-        octave: Int = 16,
         base: Int = 64,
         amplitudeLower: Int = 32,
         amplitudeUpper: Int = 128
@@ -86,7 +66,6 @@ object PerlinNoise/*(val noise: ImprovedNoise)*/ {
                         z,
                         scaleX,
                         scaleY,
-                        octave,
                         base,
                         amplitudeLower,
                         amplitudeUpper
@@ -101,10 +80,9 @@ object PerlinNoise/*(val noise: ImprovedNoise)*/ {
      */
     fun generateRegion(
         regionSize: Int, fromX: Int, fromY: Int,
-        z: Double,
+        z: Double = 0.0,
         scaleX: Double = 50.0,
         scaleY: Double = 50.0,
-        octave: Int = 16,
         base: Int = 64,
         amplitudeLower: Int = 32,
         amplitudeUpper: Int = 128
@@ -119,7 +97,6 @@ object PerlinNoise/*(val noise: ImprovedNoise)*/ {
                         z,
                         scaleX,
                         scaleY,
-                        octave,
                         base,
                         amplitudeLower,
                         amplitudeUpper

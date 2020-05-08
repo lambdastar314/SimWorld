@@ -1,12 +1,11 @@
 /*https://mrl.nyu.edu/~perlin/noise/
 より引用し、Kotlinに変換
  */
-package lambdastar314.simworld.worldgenerators.perlin
+package lambdastar314.simworld.worldgenerators.noises
 
-import lambdastar314.simworld.worldgenerators.noises.Noise
 import kotlin.math.floor
 
-object ImprovedNoise: Noise {
+class ImprovedNoise: Noise {
     override fun noise(x: Double, y: Double, z: Double): Double {
         var x = x
         var y = y

@@ -2,26 +2,31 @@ package lambdastar314.simworld.worldgenerators.perlin
 
 import lambdastar314.simworld.worldgenerators.biomes.BiomeDecliner
 import lambdastar314.simworld.worldgenerators.biomes.BiomeDecliner.Biome.*
+import lambdastar314.simworld.worldgenerators.noises.FBM
+import lambdastar314.simworld.worldgenerators.noises.ImprovedNoise
 import java.awt.*
 import java.awt.event.MouseEvent
 import java.awt.event.MouseMotionListener
 import java.awt.event.MouseWheelEvent
 import java.awt.event.MouseWheelListener
 import java.awt.image.BufferedImage
+import java.lang.Integer.max
+import java.lang.Integer.min
 import javax.swing.JFrame
+import javax.swing.Timer
 
 fun main() {
     val jf = JFrame("Perlin")
-    val canvas = MCanvas()
-    canvas.addMouseMotionListener(canvas)
-    canvas.addMouseWheelListener(canvas)
+    val canvas = NoiseCanvas()
+//    canvas.addMouseMotionListener(canvas)
+//    canvas.addMouseWheelListener(canvas)
     jf.add(canvas)
     jf.setSize(512, 512)
     jf.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
     jf.isVisible = true
 }
 
-class MCanvas : MouseMotionListener, MouseWheelListener, Canvas() {
+class WorldCanvas : MouseMotionListener, MouseWheelListener, Canvas() {
 
     var map = Array(512) { Array(512) { BiomeDecliner.Biome.NDEFINED } }
     var point = Point(0, 0)
@@ -29,6 +34,8 @@ class MCanvas : MouseMotionListener, MouseWheelListener, Canvas() {
     var scale = 400.0
     var fromX = 0
     var fromY = 0
+    var hgenerator = WorldGenerator(FBM(ImprovedNoise(), 16))
+    var tgenerator = WorldGenerator(FBM(ImprovedNoise(), 16))
 
     override fun update(g: Graphics?) {
         paint(g)
@@ -67,17 +74,17 @@ class MCanvas : MouseMotionListener, MouseWheelListener, Canvas() {
         ig.color = Color.RED
         ig.drawString(map[point.x][point.y].getName(), 256, 512 - (32 + 8 + 11))
         ig.drawString(
-            "高度: ${PerlinNoise.generate(
+            "高度: ${hgenerator.generate(
                 point.x + fromX,
                 point.y + fromY,
                 z,
                 scaleX = scale,
                 scaleY = scale
-            )}, 温度:${PerlinNoise.generate(
+            )}, 温度:${tgenerator.generate(
                 point.x + fromX, point.y + fromY, z + (Integer.MAX_VALUE - 1),
                 base = 128,
                 amplitudeLower = 128,
-                amplitudeUpper = 128, octave = 4, scaleX = scale / 2, scaleY = scale / 2
+                amplitudeUpper = 128, scaleX = scale / 2, scaleY = scale / 2
             )}度", 256, 512 - (32 + 8)
         )
         g.drawImage(image, 0, 0, this)
@@ -88,7 +95,7 @@ class MCanvas : MouseMotionListener, MouseWheelListener, Canvas() {
         val xy = height / 16
         println("$fromX, $fromY")
         val regionSize = 512
-        val reg = PerlinNoise.generateRegion(
+        val reg = hgenerator.generateRegion(
             regionSize,
             fromX,
             fromY,
@@ -96,16 +103,16 @@ class MCanvas : MouseMotionListener, MouseWheelListener, Canvas() {
             scaleX = scale,
             scaleY = scale
         )
-        val regT = PerlinNoise.generateRegion(
+
+        val regT = tgenerator.generateRegion(
             regionSize, fromX, fromY, z + (Integer.MAX_VALUE - 1),
             base = 128,
             amplitudeLower = 128,
-            amplitudeUpper = 128, octave = 4, scaleX = scale / 2, scaleY = scale / 2
+            amplitudeUpper = 128, scaleX = scale / 2, scaleY = scale / 2
         )
 
         for (x in 0 until 512) {
             for (y in 0 until 512) {
-//                val n = PerlinNoise.generate(x, y, z, octave=16, scaleX = 100.0, scaleY = 100.0)
                 val h = reg[x][y]
                 val t = regT[x][y]
                 map[x][y] =
@@ -139,5 +146,42 @@ class MCanvas : MouseMotionListener, MouseWheelListener, Canvas() {
         }
         updateMap()
         repaint()
+    }
+}
+
+class NoiseCanvas : Canvas() {
+    var z = 0.0
+    val timer = Timer(0) { repaint() }
+    var generator = WorldGenerator(ImprovedNoise().toFractal(8))
+
+    override fun update(g: Graphics?) {
+        paint(g)
+    }
+
+    override fun paint(ng: Graphics?) {
+        val mapsize = min(width, height)
+        val image = BufferedImage(mapsize, mapsize, BufferedImage.TYPE_INT_RGB)
+        var map = generator.generateRegion(
+            (width + height) / 2,
+            0,
+            0,
+            z,
+            base = 128,
+            amplitudeUpper = 128,
+            amplitudeLower = 128
+        )
+        for (x in 0 until mapsize) {
+            for (y in 0 until mapsize) {
+                val v = cut(map[x][y], 0, 255)
+                image.setRGB(x, y, Color(v, v, v).rgb)
+            }
+        }
+        ng!!.drawImage(image, 0, 0, this)
+        z += 0.01
+        if (!timer.isRunning) timer.start()
+    }
+
+    private fun cut(value: Int, min: Int, max: Int): Int {
+        return max(min(value, max), min)
     }
 }
