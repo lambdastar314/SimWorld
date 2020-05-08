@@ -3,10 +3,11 @@
  */
 package lambdastar314.simworld.worldgenerators.perlin
 
+import lambdastar314.simworld.worldgenerators.noises.Noise
 import kotlin.math.floor
 
-object ImprovedNoise/*(r: Random)*/ {
-    fun noise(x: Double, y: Double, z: Double): Double {
+object ImprovedNoise: Noise {
+    override fun noise(x: Double, y: Double, z: Double): Double {
         var x = x
         var y = y
         var z = z
@@ -23,25 +24,25 @@ object ImprovedNoise/*(r: Random)*/ {
         val v = fade(y)
         // FOR EACH OF X,Y,Z.
         val w = fade(z)
-        val A = p[X] + Y
-        val AA = p[A] + Z
-        val AB = p[A + 1] + Z
+        val A = table[X] + Y
+        val AA = table[A] + Z
+        val AB = table[A + 1] + Z
         // HASH COORDINATES OF
-        val B = p[X + 1] + Y
-        val BA = p[B] + Z
-        val BB = p[B + 1] + Z // THE 8 CUBE CORNERS,
+        val B = table[X + 1] + Y
+        val BA = table[B] + Z
+        val BB = table[B + 1] + Z // THE 8 CUBE CORNERS,
         return lerp(
             w, lerp(
                 v, lerp(
                     u,
                     grad(
-                        p[AA],
+                        table[AA],
                         x,
                         y,
                         z
                     ),  // AND ADD
                     grad(
-                        p[BA],
+                        table[BA],
                         x - 1,
                         y,
                         z
@@ -50,13 +51,13 @@ object ImprovedNoise/*(r: Random)*/ {
                 lerp(
                     u,
                     grad(
-                        p[AB],
+                        table[AB],
                         x,
                         y - 1,
                         z
                     ),  // RESULTS
                     grad(
-                        p[BB],
+                        table[BB],
                         x - 1,
                         y - 1,
                         z
@@ -67,13 +68,13 @@ object ImprovedNoise/*(r: Random)*/ {
                 v, lerp(
                     u,
                     grad(
-                        p[AA + 1],
+                        table[AA + 1],
                         x,
                         y,
                         z - 1
                     ),  // CORNERS
                     grad(
-                        p[BA + 1],
+                        table[BA + 1],
                         x - 1,
                         y,
                         z - 1
@@ -82,13 +83,13 @@ object ImprovedNoise/*(r: Random)*/ {
                 lerp(
                     u,
                     grad(
-                        p[AB + 1],
+                        table[AB + 1],
                         x,
                         y - 1,
                         z - 1
                     ),
                     grad(
-                        p[BB + 1],
+                        table[BB + 1],
                         x - 1,
                         y - 1,
                         z - 1
@@ -114,8 +115,8 @@ object ImprovedNoise/*(r: Random)*/ {
         return (if (h and 1 == 0) u else -u) + if (h and 2 == 0) v else -v
     }
 
-    val p = IntArray(512)
-    val permutation = intArrayOf(
+    private var table = IntArray(512)
+    private val permutation = intArrayOf(
         151, 160, 137, 91, 90, 15,
         131, 13, 201, 95, 96, 53, 194, 233, 7, 225, 140, 36, 103, 30, 69, 142, 8, 99, 37, 240, 21, 10, 23,
         190, 6, 148, 247, 120, 234, 75, 0, 26, 197, 62, 94, 252, 219, 203, 117, 35, 11, 32, 57, 177, 33,
@@ -131,10 +132,19 @@ object ImprovedNoise/*(r: Random)*/ {
         138, 236, 205, 93, 222, 114, 67, 29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180
     )
 
+    fun getTable(): IntArray {
+        return table
+    }
+    fun setTable(newTable: IntArray) {
+        if(newTable.size == 512){
+            table = newTable
+        }
+    }
+
     init {
         for (i in 0..255) {
-            p[i] = permutation[i]
-            p[256 + i] = p[i]
+            table[i] = permutation[i]
+            table[256 + i] = table[i]
 //            p[i] = r.nextInt(255)
 //            p[256 + i] = p[i]
         }
