@@ -5,7 +5,7 @@ import lambdastar314.simworld.worldgenerators.biomes.BiomeDecliner
 import lambdastar314.simworld.worldgenerators.biomes.BiomeDecliner.Biome.*
 import lambdastar314.simworld.worldgenerators.noises.FBM
 import lambdastar314.simworld.worldgenerators.noises.MyNoise
-import lambdastar314.simworld.worldgenerators.noises.WhiteNoise
+import lambdastar314.simworld.worldgenerators.noises.BlockNoise
 import java.awt.*
 import java.awt.event.MouseEvent
 import java.awt.event.MouseMotionListener
@@ -161,7 +161,7 @@ class NoiseCanvas : Canvas() {
 
     //    var generator = WorldGenerator(MyNoise(XORHash(), 1, MyNoise.QuinticFunction()).toFractal(16))
 //    var generator = WorldGenerator(ImprovedNoise().toFractal(16))
-    var generator = WorldGenerator(WhiteNoise(XORHash(), 1).toFractal(16))
+    var generator = WorldGenerator(BlockNoise(XORHash(), 1).toFractal(16))
 
     override fun update(g: Graphics?) {
         paint(g)
