@@ -4,7 +4,7 @@ import lambdastar314.simworld.util.hash.XORHash
 import lambdastar314.simworld.worldgenerators.biomes.BiomeDecliner
 import lambdastar314.simworld.worldgenerators.biomes.BiomeDecliner.Biome.*
 import lambdastar314.simworld.worldgenerators.noises.FBM
-import lambdastar314.simworld.worldgenerators.noises.MyNoise
+import lambdastar314.simworld.worldgenerators.noises.ValueNoise
 import lambdastar314.simworld.worldgenerators.noises.BlockNoise
 import java.awt.*
 import java.awt.event.MouseEvent
@@ -39,8 +39,8 @@ class WorldCanvas : MouseMotionListener, MouseWheelListener, Canvas() {
     var scale = 400.0
     var fromX = 0
     var fromY = 0
-    var hgenerator = WorldGenerator(FBM(MyNoise(XORHash(), 1, MyNoise.SinFunction()), 16))
-    var tgenerator = WorldGenerator(FBM(MyNoise(XORHash(), 1, MyNoise.SinFunction()), 8))
+    var hgenerator = WorldGenerator(FBM(ValueNoise(XORHash(), 1, ValueNoise.SinFunction()), 16))
+    var tgenerator = WorldGenerator(FBM(ValueNoise(XORHash(), 1, ValueNoise.SinFunction()), 8))
 
     override fun update(g: Graphics?) {
         paint(g)
@@ -200,7 +200,7 @@ class LinearNoiseCanvas : Canvas() {
     var yoff = 0.0
     var z = 0.0
     val timer = Timer(10) { repaint() }
-    var noise = MyNoise(XORHash(), 1, MyNoise.QuinticFunction()).toFractal(3)
+    var noise = ValueNoise(XORHash(), 1, ValueNoise.QuinticFunction()).toFractal(3)
 //    var generator = WorldGenerator(MyNoise(XORHash(), 1, MyNoise.CubicFunction()))
 
     override fun update(g: Graphics?) {

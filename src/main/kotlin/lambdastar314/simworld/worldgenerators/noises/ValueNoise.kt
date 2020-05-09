@@ -6,7 +6,7 @@ import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sin
 
-class MyNoise(var hash: Hash, var seed: Int, var f: Function<Double, Double>) : Noise {
+class ValueNoise(var hash: Hash, var seed: Int, var f: Function<Double, Double>) : Noise {
 
     fun noise1D(x: Double, y: Int, z: Int): Double {
         val dx = x % 1.0
