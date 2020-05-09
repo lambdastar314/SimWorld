@@ -14,7 +14,7 @@ class ValueNoise(var hash: Hash, var seed: Int, var f: Function<Double, Double>)
         val X1 = X0 + 1
         val before = hash.hash3DDouble(X0, y, z, seed, 1.0)
         val after = hash.hash3DDouble(X1, y, z, seed, 1.0)
-        return interpolation_developing(before, after, dx)
+        return interpolation(before, after, dx)
     }
 
     fun noise2D(x: Double, y: Double, z: Int): Double {
@@ -23,7 +23,7 @@ class ValueNoise(var hash: Hash, var seed: Int, var f: Function<Double, Double>)
         val Y1 = Y0 + 1
         val before = noise1D(x, Y0, z)
         val after = noise1D(x, Y1, z)
-        return interpolation_developing(before, after, dy)
+        return interpolation(before, after, dy)
     }
 
     fun noise3D(x: Double, y: Double, z: Double): Double {
@@ -32,28 +32,16 @@ class ValueNoise(var hash: Hash, var seed: Int, var f: Function<Double, Double>)
         val Z1 = Z0 + 1
         val before = noise2D(x, y, Z0)
         val after = noise2D(x, y, Z1)
-        return interpolation_developing(before, after, dz)
+        return interpolation(before, after, dz)
     }
 
     override fun noise(x: Double, y: Double, z: Double): Double = noise3D(x, y, z)
 
     /**
      * 内挿を行う
-     */
-    @Deprecated("必要なし")
-    private fun interpolation(x0: Double, y0: Double, x1: Double, y1: Double, x2: Double): Double {
-        val X0 = scan(y0)
-        val X1 = scan(y1)
-        val X2 = lerp(x0, X0, x1, X1, x2)
-        return f.apply(X2)
-//        return lerp(x0, y0, x1, y1, x2)
-    }
-
-    /**
-     * 内挿を行う
      * interpolation(Double, Double, Double, Double)の改良版
      */
-    private fun interpolation_developing(y0: Double, y1: Double, x2: Double): Double {
+    private fun interpolation(y0: Double, y1: Double, x2: Double): Double {
         return lerp(-1.0, y0, 1.0, y1, f.apply(x2))
     }
 
@@ -68,31 +56,6 @@ class ValueNoise(var hash: Hash, var seed: Int, var f: Function<Double, Double>)
         x: Double
     ): Double {
         return y0 + (y1 - y0) * (x - x0) / (x1 - x0)
-    }
-
-    /**
-     * 関数fに対して、yの値が一致するxを検出する。
-     * 検出は二分探索にて行うため、f(x)に於いてxが増加するとyも増加することが必須である。
-     */
-    @Deprecated("必要なし")
-    private fun scan(y: Double): Double {
-        var i = 0.5
-        var n = -1
-        val limit = 100
-        var current = 0
-        while (current < limit) {
-            val fy = f.apply(i)
-            if (fy == y) break
-            if (fy < y) {
-                i += 2.0.pow(n)
-            }
-            if (fy > y) {
-                n--
-                i -= 2.0.pow(n)
-            }
-            current++
-        }
-        return i
     }
 
     class SinFunction : Function<Double, Double> {
