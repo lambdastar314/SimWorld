@@ -101,10 +101,9 @@ class ValueNoise(var hash: Hash, var seed: Int, var f: Function<Double, Double>)
             sin(x * pi + pi / 2 + pi)
     }
 
-    class LinearFunction(var a: Double) : Function<Double, Double> {
+    class LinearFunction : Function<Double, Double> {
         override fun apply(x: Double): Double {
-            val a = abs(this.a)
-            return a * x
+            return 2 * x - 1
         }
     }
 
