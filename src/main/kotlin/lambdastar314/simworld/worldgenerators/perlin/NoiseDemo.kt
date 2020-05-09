@@ -1,9 +1,10 @@
 package lambdastar314.simworld.worldgenerators.perlin
 
+import lambdastar314.simworld.util.hash.XORHash
 import lambdastar314.simworld.worldgenerators.biomes.BiomeDecliner
 import lambdastar314.simworld.worldgenerators.biomes.BiomeDecliner.Biome.*
 import lambdastar314.simworld.worldgenerators.noises.FBM
-import lambdastar314.simworld.worldgenerators.noises.ImprovedNoise
+import lambdastar314.simworld.worldgenerators.noises.MyNoise
 import java.awt.*
 import java.awt.event.MouseEvent
 import java.awt.event.MouseMotionListener
@@ -17,9 +18,7 @@ import javax.swing.Timer
 
 fun main() {
     val jf = JFrame("Perlin")
-    val canvas = NoiseCanvas()
-//    canvas.addMouseMotionListener(canvas)
-//    canvas.addMouseWheelListener(canvas)
+    val canvas = WorldCanvas()
     jf.add(canvas)
     jf.setSize(512, 512)
     jf.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
@@ -27,22 +26,31 @@ fun main() {
 }
 
 class WorldCanvas : MouseMotionListener, MouseWheelListener, Canvas() {
+    init {
 
-    var map = Array(512) { Array(512) { BiomeDecliner.Biome.NDEFINED } }
+        addMouseMotionListener(this)
+        addMouseWheelListener(this)
+    }
+
+    var map = Array(512) { Array(512) { NDEFINED } }
     var point = Point(0, 0)
     val z = 1.0
     var scale = 400.0
     var fromX = 0
     var fromY = 0
-    var hgenerator = WorldGenerator(FBM(ImprovedNoise(), 16))
-    var tgenerator = WorldGenerator(FBM(ImprovedNoise(), 16))
+    var hgenerator = WorldGenerator(FBM(MyNoise(XORHash(), 1, MyNoise.SinFunction()), 16))
+    var tgenerator = WorldGenerator(FBM(MyNoise(XORHash(), 1, MyNoise.SinFunction()), 8))
 
     override fun update(g: Graphics?) {
         paint(g)
     }
 
     override fun paint(ng: Graphics?) {
-        if (map[0][0] == NDEFINED) updateMap()
+        if (map[0][0] == NDEFINED) {
+            ng!!.font = Font("Noto Sans CJK JP Regular", Font.PLAIN, 11)
+            ng.drawString("ただ今更新中です", 128, 128)
+            updateMap()
+        }
         System.gc()
         val g = ng!!
         val image = BufferedImage(1024, 1024, BufferedImage.TYPE_INT_RGB)
@@ -91,8 +99,6 @@ class WorldCanvas : MouseMotionListener, MouseWheelListener, Canvas() {
     }
 
     fun updateMap() {
-        val xx = width / 16
-        val xy = height / 16
         println("$fromX, $fromY")
         val regionSize = 512
         val reg = hgenerator.generateRegion(
@@ -119,12 +125,11 @@ class WorldCanvas : MouseMotionListener, MouseWheelListener, Canvas() {
                     BiomeDecliner.declineByBothHT(h, t)
             }
         }
-        val biome = map[point.x][point.y]
     }
 
     override fun mouseMoved(p0: MouseEvent?) {
         point = p0!!.point
-        repaint();
+        repaint()
     }
 
     override fun mouseDragged(p0: MouseEvent?) {
@@ -152,7 +157,8 @@ class WorldCanvas : MouseMotionListener, MouseWheelListener, Canvas() {
 class NoiseCanvas : Canvas() {
     var z = 0.0
     val timer = Timer(0) { repaint() }
-    var generator = WorldGenerator(ImprovedNoise().toFractal(8))
+    var generator = WorldGenerator(MyNoise(XORHash(), 1, MyNoise.QuinticFunction()).toFractal(16))
+//    var generator = WorldGenerator(ImprovedNoise().toFractal(16))
 
     override fun update(g: Graphics?) {
         paint(g)
@@ -161,7 +167,7 @@ class NoiseCanvas : Canvas() {
     override fun paint(ng: Graphics?) {
         val mapsize = min(width, height)
         val image = BufferedImage(mapsize, mapsize, BufferedImage.TYPE_INT_RGB)
-        var map = generator.generateRegion(
+        val map = generator.generateRegion(
             (width + height) / 2,
             0,
             0,
@@ -177,11 +183,48 @@ class NoiseCanvas : Canvas() {
             }
         }
         ng!!.drawImage(image, 0, 0, this)
-        z += 0.01
+        z += 1 / 50.0
         if (!timer.isRunning) timer.start()
     }
 
     private fun cut(value: Int, min: Int, max: Int): Int {
         return max(min(value, max), min)
+    }
+}
+
+class LinearNoiseCanvas : Canvas() {
+    var offset = 0
+    var yoff = 0.0
+    var z = 0.0
+    val timer = Timer(10) { repaint() }
+    var noise = MyNoise(XORHash(), 1, MyNoise.QuinticFunction()).toFractal(3)
+//    var generator = WorldGenerator(MyNoise(XORHash(), 1, MyNoise.CubicFunction()))
+
+    override fun update(g: Graphics?) {
+        paint(g)
+    }
+
+    override fun paint(g: Graphics?) {
+        val mapsize = min(width, height)
+        val amplitudes = mapsize / 2
+        val image = BufferedImage(mapsize, mapsize, BufferedImage.TYPE_INT_RGB)
+        val ig = image.createGraphics()
+        val scale = 32.0
+        ig.color = Color.BLACK
+        ig.fillRect(0, 0, mapsize, mapsize)
+        for (i in 0 until mapsize) {
+            val v = (noise.noise((offset + i) / scale, yoff, z) * amplitudes) + amplitudes
+            val before = (noise.noise((offset + i - 1) / scale, yoff, z) * amplitudes) + amplitudes
+            ig.color = Color.GREEN
+            ig.drawLine(i - 1, before.toInt(), i, v.toInt())
+//            if((i+offset) % scale.toInt() == 0){
+//                ig.color = Color.BLUE
+//                ig.drawLine(i,0,i,mapsize)
+//            }
+        }
+        offset++
+//        z += 0.01
+        g!!.drawImage(image, 0, 0, this)
+        if (!timer.isRunning) timer.start()
     }
 }
