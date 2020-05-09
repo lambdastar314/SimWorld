@@ -1,4 +1,4 @@
-package lambdastar314.simworld.worldgenerators.perlin
+package lambdastar314.simworld.worldgenerators
 
 import lambdastar314.simworld.util.hash.XORHash
 import lambdastar314.simworld.worldgenerators.biomes.BiomeDecliner
@@ -17,8 +17,8 @@ import javax.swing.JFrame
 import javax.swing.Timer
 
 fun main() {
-    val jf = JFrame("Perlin")
-    val canvas = NoiseCanvas()
+    val jf = JFrame("Noise")
+    val canvas = WorldCanvas()
     jf.add(canvas)
     jf.setSize(512, 512)
     jf.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
@@ -38,8 +38,8 @@ class WorldCanvas : MouseMotionListener, MouseWheelListener, Canvas() {
     var scale = 400.0
     var fromX = 0
     var fromY = 0
-    var hgenerator = WorldGenerator(FBM(ValueNoise(XORHash(), 1, ValueNoise.SinFunction()), 16))
-    var tgenerator = WorldGenerator(FBM(ValueNoise(XORHash(), 1, ValueNoise.SinFunction()), 8))
+    var hgenerator = WorldGenerator(FBM(ValueNoise(XORHash(), 314159265, ValueNoise.SinFunction()), 16))
+    var tgenerator = WorldGenerator(FBM(ValueNoise(XORHash(), 141421356, ValueNoise.SinFunction()), 8))
 
     override fun update(g: Graphics?) {
         paint(g)

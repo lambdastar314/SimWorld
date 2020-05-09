@@ -1,4 +1,4 @@
-package lambdastar314.simworld.worldgenerators.perlin
+package lambdastar314.simworld.worldgenerators
 
 import lambdastar314.simworld.worldgenerators.noises.Noise
 
