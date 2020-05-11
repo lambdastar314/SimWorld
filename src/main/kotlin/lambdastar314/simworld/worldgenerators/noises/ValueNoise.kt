@@ -9,7 +9,7 @@ import kotlin.math.sin
 class ValueNoise(var hash: Hash, var seed: Int, var f: Function<Double, Double>) : Noise {
 
     fun noise1D(x: Double, y: Int, z: Int): Double {
-        val dx = x % 1.0
+        val dx = (1.0 + x % 1.0) % 1.0
         val X0 = (x - dx).toInt()
         val X1 = X0 + 1
         val before = hash.hash3DDouble(X0, y, z, seed, 1.0)
@@ -18,7 +18,7 @@ class ValueNoise(var hash: Hash, var seed: Int, var f: Function<Double, Double>)
     }
 
     fun noise2D(x: Double, y: Double, z: Int): Double {
-        val dy = y % 1.0
+        val dy = (1.0 + y % 1.0) % 1.0
         val Y0 = (y - dy).toInt()
         val Y1 = Y0 + 1
         val before = noise1D(x, Y0, z)
@@ -27,7 +27,7 @@ class ValueNoise(var hash: Hash, var seed: Int, var f: Function<Double, Double>)
     }
 
     fun noise3D(x: Double, y: Double, z: Double): Double {
-        val dz = z % 1.0
+        val dz = (1.0 + z % 1.0) % 1.0
         val Z0 = (z - dz).toInt()
         val Z1 = Z0 + 1
         val before = noise2D(x, y, Z0)

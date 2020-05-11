@@ -18,7 +18,7 @@ import javax.swing.Timer
 
 fun main() {
     val jf = JFrame("Noise")
-    val canvas = WorldCanvas()
+    val canvas = LinearNoiseCanvas()
     jf.add(canvas)
     jf.setSize(512, 512)
     jf.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
@@ -199,7 +199,7 @@ class LinearNoiseCanvas : Canvas() {
     var yoff = 0.0
     var z = 0.0
     val timer = Timer(10) { repaint() }
-    var noise = ValueNoise(XORHash(), 1, ValueNoise.QuinticFunction()).toFractal(3)
+    var noise = ValueNoise(XORHash(), 1, ValueNoise.SinFunction())
 //    var generator = WorldGenerator(MyNoise(XORHash(), 1, MyNoise.CubicFunction()))
 
     override fun update(g: Graphics?) {
@@ -224,7 +224,7 @@ class LinearNoiseCanvas : Canvas() {
 //                ig.drawLine(i,0,i,mapsize)
 //            }
         }
-        offset++
+        offset--
 //        z += 0.01
         g!!.drawImage(image, 0, 0, this)
         if (!timer.isRunning) timer.start()
